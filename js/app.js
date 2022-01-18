@@ -34,6 +34,7 @@ function leerDatosCurso(curso){
     titulo : curso.querySelector('h4').textContent,
     precio : curso.querySelector('p span').textContent,
     id: curso.querySelector('a').getAttribute('data-id'),
+    cantidad : 1,
 
     }
 
