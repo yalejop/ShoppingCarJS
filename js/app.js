@@ -13,7 +13,17 @@ cargarEventListeners();
 
 function cargarEventListeners() {
     //agregar un curso al carrito
-    listaCursos.addEventListener('click', agregarCursos)
+    listaCursos.addEventListener('click', agregarCursos);
+
+    //eliminar un curso del carrito
+    carrito.addEventListener('click', eliminarCurso);
+
+    //vaciar el carrito
+    vaciarCarrito.addEventListener('click', () => {
+        articulosCarrito = []; //reseteamos el arreglo
+
+        limpiarHTML(); // eliminamos todo el HTML
+    })
 }
 
 //functiones
@@ -26,6 +36,16 @@ function agregarCursos(e) {
         // console.log(cursoSeleccionado)
         leerDatosCurso(cursoSeleccionado);
     }
+}
+
+function eliminarCurso(e) {
+    if (e.target.classList.contains('borrar-curso')) {
+        const cursoId = e.target.getAttribute('data-id')
+        
+        articulosCarrito = articulosCarrito.filter( curso => curso.id !== cursoId)
+        
+        carritoHTML(); //iterar sobre el carrito y mostrar su html
+    };
 }
 
 //lee el contenido del HTML al que le dimos click y extrae la información del curso
@@ -42,13 +62,28 @@ function leerDatosCurso(curso){
     cantidad : 1,
 
     }
-
-    carritoHTML();
-
-    //agregar elementos al arreglo del carrito
-    articulosCarrito = [...articulosCarrito, infoCurso]
+    //revisar si un elemento ya existe en el carrito
+    const existe = articulosCarrito.some( curso => curso.id === infoCurso.id)
+    if (existe) {
+        //actualizamos la cantidad
+        const cursos = articulosCarrito.map( curso => {
+            if (curso.id === infoCurso.id) {
+                curso.cantidad++
+                return curso //retorna el objeto actualizado
+            } else {
+                return curso//retorna los objetos que no son duplicados
+            }
+        });
+        articulosCarrito = [...cursos];
+    } else {
+        //agregar elementos al arreglo del carrito
+        articulosCarrito = [...articulosCarrito, infoCurso]
+    }
+    
 
     console.log(articulosCarrito)
+
+    carritoHTML();
 }
 
 //mostrar el carrito de compras en el HTML
